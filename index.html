@@ -8,6 +8,7 @@
   <title>ARDMAN — география работ</title>
   <link rel="icon" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
+  <script src="globe3d.js" defer></script>
   <script src="app.js" defer></script>
   <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 </head>
@@ -41,19 +42,21 @@
               <strong>От Земли — к объектам по всей России</strong>
               <span>Нажмите на планету, чтобы перейти к карте Российской Федерации.</span>
             </div>
-            <button class="earth-button" id="enter-russia" type="button" aria-label="Открыть карту Российской Федерации">
-              <span class="earth-orbit" aria-hidden="true">
-                <span class="earth-glow"></span>
-                <span class="earth">
-                  <span class="earth-texture"></span>
-                  <span class="earth-clouds"></span>
-                  <span class="earth-shade"></span>
-                </span>
-                <span class="earth-ring"></span>
-              </span>
-              <span class="earth-action">Открыть карту России <b>→</b></span>
-            </button>
-            <span class="space-hint">Нажмите на Землю</span>
+            <div class="earth-experience" id="earth-experience">
+              <canvas id="earth-canvas" class="earth-canvas" aria-label="Интерактивная трёхмерная модель Земли. Потяните, чтобы повернуть планету."></canvas>
+              <div class="earth-status" id="earth-status" aria-live="polite">3D / WEBGL</div>
+              <div class="russia-lock" id="russia-lock" aria-hidden="true">
+                <span class="russia-lock-ring"></span>
+                <span class="russia-lock-dot"></span>
+                <strong>РОССИЯ</strong>
+                <small>Фокусировка территории</small>
+              </div>
+              <div class="flight-meter" id="flight-meter" aria-hidden="true"><span></span></div>
+              <button class="earth-action" id="enter-russia" type="button" aria-label="Приблизить Россию и открыть карту Российской Федерации">
+                Открыть карту России <b>→</b>
+              </button>
+            </div>
+            <span class="space-hint">Потяните — вращение · Нажмите — Россия</span>
           </div>
           <div class="russia-map-stage" id="russia-map-stage" aria-hidden="true">
             <div class="map-top">

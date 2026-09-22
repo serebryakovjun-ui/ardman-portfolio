@@ -118,3 +118,49 @@ footer{border-color:rgba(255,255,255,.4);color:#3d3e39}footer span:first-child{c
 @media(max-width:900px){.workspace.is-space{display:block}.workspace.is-space .region-panel{display:none}.workspace.is-space .globe-map-panel{min-height:620px}.space-copy{max-width:54%}.earth-button{min-height:600px;padding-top:112px}.earth-orbit{width:clamp(250px,55vw,390px)}}
 @media(max-width:640px){.workspace.is-space .globe-map-panel{min-height:560px}.space-copy{left:18px;right:18px;top:20px;max-width:none;text-align:center}.space-copy strong{font-size:1.45rem}.space-copy>span:last-child{max-width:none;font-size:.74rem}.earth-button{width:100%;min-height:560px;padding:126px 8px 24px;gap:12px}.earth-orbit{width:min(78vw,310px)}.earth{width:82%;height:82%}.earth-action{padding:11px 14px;font-size:.62rem}.space-hint{display:none}.space-grid{background-size:58px 58px}.workspace.is-entering .russia-map-stage{opacity:.18}}
 @media(prefers-reduced-motion:reduce){.space-intro::before,.earth-texture,.earth-clouds,.earth-glow,.earth-ring{animation:none!important}.earth-orbit,.space-intro,.russia-map-stage,.region-panel,.workspace{transition:none!important}}
+
+/* ===== ARDMAN / Real WebGL Earth ===== */
+.earth-experience{position:relative;z-index:4;display:grid;place-items:center;width:min(760px,96%);min-height:560px;padding:70px 18px 34px;isolation:isolate}
+.earth-canvas{display:block;width:min(560px,72vw);height:min(560px,72vw);max-width:100%;aspect-ratio:1;border:0;border-radius:50%;cursor:grab;touch-action:none;outline:none;filter:drop-shadow(0 34px 58px rgba(0,0,0,.52));transition:filter .35s ease,opacity .5s ease;will-change:transform}
+.earth-canvas:active{cursor:grabbing}.earth-experience:hover .earth-canvas{filter:drop-shadow(0 38px 72px rgba(0,0,0,.58)) drop-shadow(0 0 34px rgba(54,151,255,.16))}
+.earth-status{position:absolute;left:50%;top:76px;transform:translateX(-50%);z-index:5;padding:7px 10px;border:1px solid rgba(151,199,242,.18);border-radius:999px;background:rgba(3,12,25,.38);color:rgba(190,218,244,.64);font-size:.55rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(10px);pointer-events:none;white-space:nowrap}
+.earth-experience .earth-action{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:7;min-height:46px;white-space:nowrap}
+.earth-experience .earth-action:hover{transform:translateX(-50%) translateY(-2px);background:rgba(14,38,68,.82);border-color:rgba(169,215,255,.52)}
+.earth-experience .earth-action:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.earth-experience.webgl-fallback::before{content:"";width:min(380px,70vw);aspect-ratio:1;border-radius:50%;background:#083b6a url('earth-texture.png') center/210% 100% no-repeat;box-shadow:inset -55px -15px 90px rgba(0,0,0,.62),0 0 0 1px rgba(148,211,255,.35),0 0 60px rgba(43,145,236,.28)}
+.earth-experience.webgl-fallback .earth-canvas{display:none}
+.space-intro.is-entering .earth-experience{pointer-events:none}
+.space-intro.is-entering .earth-status,.space-intro.is-entering .earth-action,.space-intro.is-entering .space-copy,.space-intro.is-entering .space-hint{opacity:0;transition:opacity .28s ease}
+.space-intro.is-entering{transition:opacity .4s ease .18s,filter .4s ease .18s;opacity:0;filter:brightness(1.2)}
+@media(max-width:900px){.earth-experience{min-height:600px;padding-top:96px}.earth-canvas{width:min(500px,70vw);height:min(500px,70vw)}.earth-status{top:98px}}
+@media(max-width:640px){.earth-experience{width:100%;min-height:560px;padding:118px 4px 28px}.earth-canvas{width:min(88vw,360px);height:min(88vw,360px)}.earth-status{top:120px;font-size:.49rem}.earth-experience .earth-action{bottom:24px;font-size:.62rem;padding:11px 14px}.space-intro.is-entering .earth-experience{opacity:.98}}
+@media(prefers-reduced-motion:reduce){.earth-canvas{transition:none!important}}
+
+
+/* ===== ARDMAN / Cinematic Russia flight ===== */
+.workspace.is-entering .russia-map-stage{opacity:0;transform:scale(.94);filter:blur(16px);pointer-events:none}
+.workspace.is-entering.is-map-reveal .russia-map-stage{opacity:calc(.18 + var(--flight,1)*.82);transform:scale(calc(.94 + var(--flight,1)*.06));filter:blur(calc((1 - var(--flight,1))*10px))}
+.space-intro.is-focusing{opacity:1;filter:none}
+.space-intro.is-focusing .space-copy,.space-intro.is-focusing .space-hint,.space-intro.is-focusing .earth-action{opacity:0;transform:translateY(-10px);transition:opacity .3s ease,transform .3s ease;pointer-events:none}
+.space-intro.is-focusing .earth-status{top:clamp(30px,5vw,58px);color:rgba(225,241,255,.88);border-color:rgba(108,181,255,.34);background:rgba(4,18,38,.62)}
+.space-intro.is-focusing::after{background:radial-gradient(ellipse at 50% 55%,rgba(47,137,255,.24),transparent 30%),radial-gradient(ellipse at 72% 30%,rgba(112,77,150,.08),transparent 26%)}
+.space-intro.is-focusing .earth-canvas{filter:drop-shadow(0 40px 95px rgba(0,0,0,.72)) drop-shadow(0 0 55px rgba(45,148,255,.28))}
+
+.russia-lock{position:absolute;left:50%;top:52%;z-index:8;width:156px;height:156px;transform:translate(-50%,-50%) scale(.74);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .38s ease,transform .58s cubic-bezier(.16,.84,.2,1)}
+.russia-lock::before,.russia-lock::after{content:"";position:absolute;inset:0;border:1px solid rgba(115,190,255,.42);border-radius:50%;box-shadow:0 0 30px rgba(52,143,255,.14),inset 0 0 30px rgba(52,143,255,.08)}
+.russia-lock::after{inset:23px;border-style:dashed;opacity:.56;animation:lockSpin 9s linear infinite}
+.russia-lock-ring{position:absolute;inset:48px;border-radius:50%;border:1px solid rgba(174,220,255,.76);box-shadow:0 0 18px rgba(70,163,255,.42)}
+.russia-lock-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:#bfe3ff;box-shadow:0 0 0 6px rgba(75,164,255,.12),0 0 24px rgba(96,184,255,.94)}
+.russia-lock strong{position:absolute;top:calc(100% + 16px);font-size:.7rem;letter-spacing:.19em;color:#eaf6ff;text-shadow:0 0 18px rgba(78,165,255,.6)}
+.russia-lock small{position:absolute;top:calc(100% + 35px);white-space:nowrap;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(192,220,245,.62)}
+.earth-experience.is-focusing .russia-lock{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+.flight-meter{position:absolute;left:50%;bottom:30px;z-index:9;width:min(310px,58vw);height:2px;overflow:hidden;opacity:0;transform:translateX(-50%);background:rgba(142,194,239,.16);pointer-events:none;transition:opacity .3s ease}
+.flight-meter span{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,rgba(92,174,255,.7),#e1f3ff);box-shadow:0 0 13px rgba(73,160,255,.7)}
+.earth-experience.is-focusing .flight-meter{opacity:1}
+.space-intro.is-entering .russia-lock,.space-intro.is-entering .flight-meter{opacity:0;transition:opacity .28s ease}
+.space-intro.is-entering .earth-experience{transform:scale(1.06);opacity:.18;filter:blur(1.5px);transition:transform .62s cubic-bezier(.16,.84,.2,1),opacity .5s ease,filter .5s ease}
+
+@keyframes lockSpin{to{transform:rotate(360deg)}}
+@media(max-width:640px){.russia-lock{top:53%;width:120px;height:120px}.russia-lock::after{inset:18px}.russia-lock-ring{inset:37px}.russia-lock strong{top:calc(100% + 12px);font-size:.62rem}.russia-lock small{top:calc(100% + 29px);font-size:.46rem}.flight-meter{bottom:27px;width:min(240px,64vw)}}
+@media(prefers-reduced-motion:reduce){.russia-lock::after{animation:none!important}}

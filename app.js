@@ -23,22 +23,38 @@ let globeEntered=false,globeRevealTimer=0;
 function setupGlobeIntro(){
   const workspace=$('workspace'),intro=$('space-intro'),stage=$('russia-map-stage'),button=$('enter-russia');
   if(!workspace||!intro||!stage||!button)return;
-  const reveal=(animate=true)=>{
+  const reveal=async(animate=true)=>{
     if(globeEntered)return;
     globeEntered=true;
     const finish=()=>{
-      workspace.classList.remove('is-space','is-entering');
+      workspace.classList.remove('is-space','is-entering','is-map-reveal');
       workspace.classList.add('is-map');
+      workspace.style.removeProperty('--flight');
+      intro.classList.remove('is-focusing','is-entering');
       intro.hidden=true;
       stage.setAttribute('aria-hidden','false');
+      window.ARDMANGlobe?.stop?.();
       requestAnimationFrame(()=>{layoutLabels();setMapZoom(mapZoom);});
     };
     if(!animate||matchMedia('(prefers-reduced-motion: reduce)').matches){finish();return;}
     workspace.classList.add('is-entering');
-    intro.classList.add('is-entering');
+    intro.classList.add('is-focusing');
     stage.setAttribute('aria-hidden','false');
+    const meter=$('flight-meter');
+    const meterBar=meter?.querySelector('span');
+    const onFlight=e=>{
+      const p=Math.max(0,Math.min(1,Number(e.detail?.progress)||0));
+      workspace.style.setProperty('--flight',p.toFixed(3));
+      if(meterBar)meterBar.style.transform=`scaleX(${p})`;
+      if(p>.72)workspace.classList.add('is-map-reveal');
+    };
+    window.addEventListener('ardman-globe-flight',onFlight);
+    try{await window.ARDMANGlobe?.flyToRussia?.();}catch{}
+    window.removeEventListener('ardman-globe-flight',onFlight);
+    workspace.classList.add('is-map-reveal');
+    intro.classList.add('is-entering');
     clearTimeout(globeRevealTimer);
-    globeRevealTimer=setTimeout(finish,1180);
+    globeRevealTimer=setTimeout(finish,620);
   };
   if(location.hash.startsWith('#region/')){
     globeEntered=true;
@@ -50,6 +66,7 @@ function setupGlobeIntro(){
     workspace.classList.add('is-space');
     stage.setAttribute('aria-hidden','true');
     intro.hidden=false;
+    requestAnimationFrame(()=>window.ARDMANGlobe?.init?.());
   }
   button.addEventListener('click',()=>reveal(true));
 }
