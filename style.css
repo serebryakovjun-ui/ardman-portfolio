@@ -138,8 +138,8 @@ footer{border-color:rgba(255,255,255,.4);color:#3d3e39}footer span:first-child{c
 
 
 /* ===== ARDMAN / Cinematic Russia flight ===== */
-.workspace.is-entering .russia-map-stage{opacity:0;transform:scale(.94);filter:blur(16px);pointer-events:none}
-.workspace.is-entering.is-map-reveal .russia-map-stage{opacity:calc(.18 + var(--flight,1)*.82);transform:scale(calc(.94 + var(--flight,1)*.06));filter:blur(calc((1 - var(--flight,1))*10px))}
+.workspace.is-entering .russia-map-stage{opacity:0;transform:scale(.94);filter:none;pointer-events:none}
+.workspace.is-entering.is-map-reveal .russia-map-stage{opacity:calc(.18 + var(--flight,1)*.82);transform:scale(calc(.94 + var(--flight,1)*.06));filter:none}
 .space-intro.is-focusing{opacity:1;filter:none}
 .space-intro.is-focusing .space-copy,.space-intro.is-focusing .space-hint,.space-intro.is-focusing .earth-action{opacity:0;transform:translateY(-10px);transition:opacity .3s ease,transform .3s ease;pointer-events:none}
 .space-intro.is-focusing .earth-status{top:clamp(30px,5vw,58px);color:rgba(225,241,255,.88);border-color:rgba(108,181,255,.34);background:rgba(4,18,38,.62)}
@@ -159,7 +159,7 @@ footer{border-color:rgba(255,255,255,.4);color:#3d3e39}footer span:first-child{c
 .flight-meter span{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,rgba(92,174,255,.7),#e1f3ff);box-shadow:0 0 13px rgba(73,160,255,.7)}
 .earth-experience.is-focusing .flight-meter{opacity:1}
 .space-intro.is-entering .russia-lock,.space-intro.is-entering .flight-meter{opacity:0;transition:opacity .28s ease}
-.space-intro.is-entering .earth-experience{transform:scale(1.06);opacity:.18;filter:blur(1.5px);transition:transform .62s cubic-bezier(.16,.84,.2,1),opacity .5s ease,filter .5s ease}
+.space-intro.is-entering .earth-experience{transform:scale(1.06);opacity:.18;filter:none;transition:transform .62s cubic-bezier(.16,.84,.2,1),opacity .5s ease}
 
 @keyframes lockSpin{to{transform:rotate(360deg)}}
 @media(max-width:640px){.russia-lock{top:53%;width:120px;height:120px}.russia-lock::after{inset:18px}.russia-lock-ring{inset:37px}.russia-lock strong{top:calc(100% + 12px);font-size:.62rem}.russia-lock small{top:calc(100% + 29px);font-size:.46rem}.flight-meter{bottom:27px;width:min(240px,64vw)}}

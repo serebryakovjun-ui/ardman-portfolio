@@ -84,7 +84,9 @@
     uniform vec3 uLight;uniform vec3 uCamera;uniform float uTime;
     float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
     float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
-    float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.03+17.3;a*=.5;}return v;}
+    /* Three octaves retain the cloud silhouette while cutting the most
+       expensive full-screen shader pass almost in half. */
+    float fbm(vec2 p){float v=0.,a=.56;for(int i=0;i<3;i++){v+=a*noise(p);p=p*2.03+17.3;a*=.46;}return v;}
     void main(){
       vec2 uv=vUV;uv.x=fract(uv.x+uTime*.0032);
       float n=fbm(uv*vec2(8.,4.));float n2=fbm(uv*vec2(18.,9.)+5.7);
@@ -102,15 +104,26 @@
   `;
 
   function Globe(canvas,status){
-    this.canvas=canvas;this.status=status;this.gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:false})||canvas.getContext('experimental-webgl');
+    this.canvas=canvas;this.status=status;
+    this.mobile=matchMedia('(max-width:640px)').matches;
+    this.lowPower=this.mobile||((navigator.hardwareConcurrency||8)<=4)||((navigator.deviceMemory||8)<=4);
+    this.gl=canvas.getContext('webgl',{alpha:true,antialias:!this.lowPower,premultipliedAlpha:false,powerPreference:'high-performance'})||canvas.getContext('experimental-webgl');
     if(!this.gl)throw new Error('WebGL unavailable');
     const gl=this.gl;gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.cullFace(gl.BACK);gl.clearColor(0,0,0,0);
     this.surface=createProgram(gl,SURFACE_VS,SURFACE_FS);this.cloud=createProgram(gl,SURFACE_VS,CLOUD_FS);this.atmo=createProgram(gl,SURFACE_VS,ATMO_FS);
-    const mobile=matchMedia('(max-width:640px)').matches;this.geo=makeSphere(mobile?44:64,mobile?68:96,1);
+    this.geo=makeSphere(this.mobile?40:56,this.mobile?64:88,1);
     this.buffers={};
     const upload=(name,data,target=gl.ARRAY_BUFFER)=>{const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);this.buffers[name]=b;};
     upload('pos',this.geo.pos);upload('norm',this.geo.norm);upload('uv',this.geo.uv);upload('idx',this.geo.idx,gl.ELEMENT_ARRAY_BUFFER);
     this.rotationX=0.16;this.rotationY=0.08;this.cloudOffset=0;this.cameraZ=3.05;this.dragging=false;this.dragMoved=false;this.lastX=0;this.lastY=0;this.velX=0;this.velY=0;this.fly=null;this.running=true;this.lastTime=performance.now();
+    this.lastRenderTime=0;this.frameSamples=[];this.qualityScale=this.lowPower ? .78 : .92;this.lastQualityCheck=0;this.lastFlightEvent=0;this.lastFlightPercent=-1;
+    this.light=new Float32Array([-2.8,1.5,3.8]);this.camera=new Float32Array(3);
+    this.programInfo=new Map();
+    [this.surface,this.cloud,this.atmo].forEach(program=>this.programInfo.set(program,{
+      program,
+      attrib:{pos:gl.getAttribLocation(program,'aPos'),norm:gl.getAttribLocation(program,'aNormal'),uv:gl.getAttribLocation(program,'aUV')},
+      uniform:Object.fromEntries(['uMVP','uModel','uLight','uCamera','uTime','uDay','uNight','uRussia','uNightReady','uRussiaReady','uRussiaGlow'].map(name=>[name,gl.getUniformLocation(program,name)]))
+    }));
     this.russiaGlow=0;this.flightProgress=0;
     this.dayTex=this.makeSolidTexture([44,88,128,255]);this.nightTex=this.makeSolidTexture([0,0,0,255]);this.russiaTex=this.makeSolidTexture([0,0,0,255]);this.nightReady=0;this.russiaReady=0;
     this.loadTexture('earth-texture.png',tex=>{this.dayTex=tex;this.statusText('3D / LOCAL TEXTURE');});
@@ -140,19 +153,19 @@
     c.addEventListener('wheel',e=>{e.preventDefault();this.cameraZ=clamp(this.cameraZ+e.deltaY*.0016,2.25,4.1);},{passive:false});
     window.addEventListener('resize',()=>this.resize());
   };
-  Globe.prototype.resize=function(){const gl=this.gl,c=this.canvas,rect=c.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,matchMedia('(max-width:640px)').matches?1.65:2);const w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h;gl.viewport(0,0,w,h);}this.aspect=w/h;};
-  Globe.prototype.setAttribs=function(program){const gl=this.gl;gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.buffers.idx);[['aPos','pos',3],['aNormal','norm',3],['aUV','uv',2]].forEach(([name,key,size])=>{const loc=gl.getAttribLocation(program,name);if(loc<0)return;gl.bindBuffer(gl.ARRAY_BUFFER,this.buffers[key]);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);});};
-  Globe.prototype.draw=function(program,model,alphaMode=false){const gl=this.gl;gl.useProgram(program);this.setAttribs(program);const proj=mat4Perspective(Math.PI/4,this.aspect,.1,20),view=mat4Translate(-this.cameraZ),mvp=mat4Multiply(proj,mat4Multiply(view,model));const uni=(n)=>gl.getUniformLocation(program,n);gl.uniformMatrix4fv(uni('uMVP'),false,mvp);gl.uniformMatrix4fv(uni('uModel'),false,model);const light=[-2.8,1.5,3.8],cam=[0,0,this.cameraZ];const l=uni('uLight');if(l)gl.uniform3fv(l,light);const ca=uni('uCamera');if(ca)gl.uniform3fv(ca,cam);const tm=uni('uTime');if(tm)gl.uniform1f(tm,performance.now()/1000);
-    if(program===this.surface){gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,this.dayTex);gl.uniform1i(uni('uDay'),0);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,this.nightTex);gl.uniform1i(uni('uNight'),1);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,this.russiaTex);gl.uniform1i(uni('uRussia'),2);gl.uniform1f(uni('uNightReady'),this.nightReady);gl.uniform1f(uni('uRussiaReady'),this.russiaReady);gl.uniform1f(uni('uRussiaGlow'),this.russiaGlow);}
+  Globe.prototype.resize=function(){const gl=this.gl,c=this.canvas,rect=c.getBoundingClientRect(),cap=this.mobile?1.25:1.65,dpr=Math.min(devicePixelRatio||1,cap)*this.qualityScale;const w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(c.width!==w||c.height!==h){c.width=w;c.height=h;gl.viewport(0,0,w,h);}this.aspect=w/h;};
+  Globe.prototype.setAttribs=function(info){const gl=this.gl;gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.buffers.idx);[['pos','pos',3],['norm','norm',3],['uv','uv',2]].forEach(([name,key,size])=>{const loc=info.attrib[name];if(loc<0)return;gl.bindBuffer(gl.ARRAY_BUFFER,this.buffers[key]);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);});};
+  Globe.prototype.draw=function(program,model,time){const gl=this.gl,info=this.programInfo.get(program),u=info.uniform;gl.useProgram(program);this.setAttribs(info);const proj=mat4Perspective(Math.PI/4,this.aspect,.1,20),view=mat4Translate(-this.cameraZ),mvp=mat4Multiply(proj,mat4Multiply(view,model));gl.uniformMatrix4fv(u.uMVP,false,mvp);gl.uniformMatrix4fv(u.uModel,false,model);this.camera[2]=this.cameraZ;if(u.uLight!==null)gl.uniform3fv(u.uLight,this.light);if(u.uCamera!==null)gl.uniform3fv(u.uCamera,this.camera);if(u.uTime!==null)gl.uniform1f(u.uTime,time);
+    if(program===this.surface){gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,this.dayTex);gl.uniform1i(u.uDay,0);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,this.nightTex);gl.uniform1i(u.uNight,1);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,this.russiaTex);gl.uniform1i(u.uRussia,2);gl.uniform1f(u.uNightReady,this.nightReady);gl.uniform1f(u.uRussiaReady,this.russiaReady);gl.uniform1f(u.uRussiaGlow,this.russiaGlow);}
     gl.drawElements(gl.TRIANGLES,this.geo.idx.length,gl.UNSIGNED_SHORT,0);
   };
-  Globe.prototype.render=function(){const gl=this.gl;gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);let model=mat4Multiply(mat4RotateZ(-0.18),mat4Multiply(mat4RotateX(this.rotationX),mat4RotateY(this.rotationY)));
-    gl.disable(gl.BLEND);gl.depthMask(true);gl.cullFace(gl.BACK);this.draw(this.surface,model);
-    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);const cloudModel=mat4Multiply(mat4RotateZ(-0.18),mat4Multiply(mat4RotateX(this.rotationX),mat4Multiply(mat4RotateY(this.rotationY+this.cloudOffset),scaleMatrix(1.014))));this.draw(this.cloud,cloudModel,true);
-    gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.cullFace(gl.FRONT);const atmoModel=mat4Multiply(model,scaleMatrix(1.07));this.draw(this.atmo,atmoModel,true);gl.cullFace(gl.BACK);gl.depthMask(true);gl.disable(gl.BLEND);
+  Globe.prototype.render=function(now){const gl=this.gl,time=now*.001;gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);let model=mat4Multiply(mat4RotateZ(-0.18),mat4Multiply(mat4RotateX(this.rotationX),mat4RotateY(this.rotationY)));
+    gl.disable(gl.BLEND);gl.depthMask(true);gl.cullFace(gl.BACK);this.draw(this.surface,model,time);
+    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);const cloudModel=mat4Multiply(mat4RotateZ(-0.18),mat4Multiply(mat4RotateX(this.rotationX),mat4Multiply(mat4RotateY(this.rotationY+this.cloudOffset),scaleMatrix(1.014))));this.draw(this.cloud,cloudModel,time);
+    gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.cullFace(gl.FRONT);const atmoModel=mat4Multiply(model,scaleMatrix(1.07));this.draw(this.atmo,atmoModel,time);gl.cullFace(gl.BACK);gl.depthMask(true);gl.disable(gl.BLEND);
   };
   function scaleMatrix(s){const o=mat4Identity();o[0]=o[5]=o[10]=s;return o;}
-  Globe.prototype.loop=function(now){if(!this.running)return;const dt=Math.min(.05,(now-this.lastTime)/1000||.016);this.lastTime=now;if(this.fly){const p=clamp((now-this.fly.start)/this.fly.duration,0,1),k=easeInOut(p);this.flightProgress=p;this.rotationX=lerp(this.fly.fromX,this.fly.toX,k);this.rotationY=lerp(this.fly.fromY,this.fly.toY,k);const zoomK=p<.78?easeInOut(p/.78):1;this.cameraZ=lerp(this.fly.fromZ,this.fly.toZ,zoomK);this.russiaGlow=clamp((p-.34)/.46,0,1);if(p>.54)this.statusText('РОССИЯ / '+Math.round(p*100)+'%');window.dispatchEvent(new CustomEvent('ardman-globe-flight',{detail:{progress:p,glow:this.russiaGlow}}));if(p>=1){this.russiaGlow=1;const resolve=this.fly.resolve;this.fly=null;this.statusText('РОССИЯ / В ФОКУСЕ');resolve();}}else if(!this.dragging){this.rotationY+=.11*dt+this.velY;this.rotationX=clamp(this.rotationX+this.velX,-1.05,1.05);this.velX*=Math.pow(.05,dt);this.velY*=Math.pow(.05,dt);}this.cloudOffset+=.018*dt;this.render();requestAnimationFrame(this.loop);};
+  Globe.prototype.loop=function(now){if(!this.running)return;requestAnimationFrame(this.loop);/* Cap high-refresh displays near 60 FPS so 120/144 Hz screens do not double the GPU load. */if(this.lastRenderTime&&now-this.lastRenderTime<14)return;const frameMs=this.lastRenderTime?now-this.lastRenderTime:16.67,dt=Math.min(.05,frameMs/1000);this.lastRenderTime=now;this.lastTime=now;if(this.fly){const p=clamp((now-this.fly.start)/this.fly.duration,0,1),k=easeInOut(p);this.flightProgress=p;this.rotationX=lerp(this.fly.fromX,this.fly.toX,k);this.rotationY=lerp(this.fly.fromY,this.fly.toY,k);const zoomK=p<.78?easeInOut(p/.78):1;this.cameraZ=lerp(this.fly.fromZ,this.fly.toZ,zoomK);this.russiaGlow=clamp((p-.34)/.46,0,1);const percent=Math.round(p*100);if(p>.54&&percent!==this.lastFlightPercent){this.lastFlightPercent=percent;this.statusText('РОССИЯ / '+percent+'%');}if(now-this.lastFlightEvent>32||p>=1){this.lastFlightEvent=now;window.dispatchEvent(new CustomEvent('ardman-globe-flight',{detail:{progress:p,glow:this.russiaGlow}}));}if(p>=1){this.russiaGlow=1;const resolve=this.fly.resolve;this.fly=null;this.statusText('РОССИЯ / В ФОКУСЕ');resolve();}}else if(!this.dragging){this.rotationY+=.11*dt+this.velY;this.rotationX=clamp(this.rotationX+this.velX,-1.05,1.05);this.velX*=Math.pow(.05,dt);this.velY*=Math.pow(.05,dt);}this.cloudOffset+=.018*dt;this.render(now);this.frameSamples.push(frameMs);if(this.frameSamples.length>60)this.frameSamples.shift();if(now-this.lastQualityCheck>1200&&this.frameSamples.length>=30){this.lastQualityCheck=now;const avg=this.frameSamples.reduce((a,b)=>a+b,0)/this.frameSamples.length,fps=1000/avg;let next=this.qualityScale;if(fps<54)next=Math.max(.56,next-.10);else if(fps>59&&next<1)next=Math.min(1,next+.035);if(Math.abs(next-this.qualityScale)>.015){this.qualityScale=next;this.resize();this.frameSamples.length=0;}}};
   Globe.prototype.flyToRussia=function(){if(this.fly)return this.fly.promise;const duration=2450;let resolve;const promise=new Promise(r=>resolve=r);let targetY=0.0873;let delta=((targetY-this.rotationY+Math.PI)%TAU)-Math.PI;targetY=this.rotationY+delta;this.fly={start:performance.now(),duration,fromX:this.rotationX,fromY:this.rotationY,fromZ:this.cameraZ,toX:1.05,toY:targetY,toZ:1.58,resolve,promise};this.statusText('РОССИЯ / НАВЕДЕНИЕ');document.getElementById('earth-experience')?.classList.add('is-focusing');return promise;};
   Globe.prototype.stop=function(){this.running=false;};
 
