@@ -1,0 +1,38 @@
+ARDMAN — публикация сайта через GitHub Desktop
+
+1. Установите GitHub Desktop:
+   https://desktop.github.com/
+
+2. Войдите в программу под своим аккаунтом GitHub.
+
+3. Полностью распакуйте архив ARDMAN_GITHUB_PAGES_READY.zip в отдельную папку.
+   В корне папки обязательно должны находиться index.html, app.js,
+   style.css, objects.json, regions.json и папка assets.
+
+4. В GitHub Desktop выберите:
+   File → New repository.
+
+5. В поле Name укажите:
+   ardman-portfolio
+
+6. В поле Local path выберите папку, в которую распакован архив.
+
+7. Нажмите Create repository, затем Publish repository.
+   Снимите галочку Keep this code private, чтобы репозиторий был публичным.
+
+8. Откройте github.com → репозиторий ardman-portfolio → Settings → Pages.
+
+9. В разделе Build and deployment:
+   Source: Deploy from a branch
+   Branch: main
+   Folder: / (root)
+   Нажмите Save.
+
+10. Подождите 2–10 минут. Ссылка появится в разделе Settings → Pages:
+    https://ВАШ_ЛОГИН.github.io/ardman-portfolio/
+
+Если GitHub Desktop не позволяет создать репозиторий в непустой папке:
+создайте пустой репозиторий ardman-portfolio через GitHub Desktop,
+откройте его папку через Repository → Show in Explorer,
+скопируйте туда всё содержимое архива, затем нажмите Commit to main
+и Push origin.

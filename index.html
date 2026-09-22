@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123ec8">
+  <meta name="description" content="Портфолио резиновых покрытий ARDMAN по регионам России и годам выполнения работ.">
+  <title>ARDMAN — география работ</title>
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#" aria-label="ARDMAN — все регионы">ARDMAN<span>®</span></a>
+      <span class="header-label">РЕЗИНОВЫЕ ПОКРЫТИЯ</span>
+    </div>
+  </header>
+  <main>
+    <section id="home">
+      <div class="heading">
+        <div>
+          <p class="eyebrow">ПОРТФОЛИО / РОССИЯ</p>
+          <h1>География работ<span class="blue">.</span></h1>
+          <p class="intro">Выберите регион на карте или в списке, затем год выполнения работ.</p>
+        </div>
+        <div class="counter" aria-label="Количество объектов в портфолио">
+          <strong id="total">0</strong><span>объектов<br>в портфолио</span>
+        </div>
+      </div>
+      <div class="workspace">
+        <section class="map-panel" aria-label="Карта регионов">
+          <div class="map-top">
+            <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small>Административная карта</small></span>
+            <span id="map-label">Выберите регион</span>
+          </div>
+          <div class="map-tools" aria-label="Масштаб карты">
+            <button id="zoom-out" aria-label="Уменьшить карту">−</button>
+            <output id="zoom-value">100%</output>
+            <button id="zoom-in" aria-label="Увеличить карту">+</button>
+            <button id="zoom-reset">Вся карта</button>
+          </div>
+          <div class="map-scroller" id="map-scroll">
+            <svg id="map" viewBox="0 0 1000 570" aria-label="Интерактивная карта России"></svg>
+          </div>
+          <div class="map-bottom">
+            <span><i></i> Регионы</span>
+            <span>Нажмите на регион, чтобы открыть объекты</span>
+          </div>
+        </section>
+        <section class="region-panel" aria-label="Список регионов">
+          <div class="list-title"><h2>Все регионы</h2><span id="region-count"></span></div>
+          <div id="regions"><p class="muted">Загружаем регионы…</p></div>
+        </section>
+      </div>
+      <p class="map-credit">Картографическая основа: <a href="https://github.com/codeforgermany/click_that_hood/blob/main/public/data/russia.geojson" target="_blank" rel="noopener">Click That ’Hood</a>. Спорные территории представлены отдельно в списке.</p>
+    </section>
+    <section id="region-view" hidden>
+      <button class="back" id="back">← Все регионы</button>
+      <p class="eyebrow">ПОРТФОЛИО / РЕГИОН</p>
+      <h1 id="region-title"></h1>
+      <p id="region-note" class="muted"></p>
+      <div id="years-panel">
+        <p class="intro">Выберите год выполнения работ.</p>
+        <div id="years" class="years-grid"></div>
+      </div>
+      <div id="objects-panel" hidden>
+        <button class="back small-back" id="back-years">← Все годы</button>
+        <p class="intro" id="result-count"></p>
+        <div id="objects"></div>
+      </div>
+    </section>
+    <div id="error" hidden role="alert">
+      <h2>Не удалось загрузить портфолио</h2>
+      <p>Проверьте соединение и попробуйте ещё раз.</p>
+      <button onclick="location.reload()">Повторить</button>
+    </div>
+    <footer><span>ARDMAN</span><span>Реализованные объекты</span></footer>
+  </main>
+  <dialog id="detail">
+    <div class="dialog-top"><button id="close-detail" class="back">← Назад к объектам</button></div>
+    <div id="detail-body"></div>
+  </dialog>
+</body>
+</html>
