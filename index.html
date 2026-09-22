@@ -26,30 +26,53 @@
         <div>
           <p class="eyebrow">ПОРТФОЛИО / РОССИЯ</p>
           <h1>География работ<span class="blue">.</span></h1>
-          <p class="intro">Выберите регион на карте или в списке, затем год выполнения работ.</p>
+          <p class="intro">Нажмите на Землю, затем выберите регион России и год выполнения работ.</p>
         </div>
         <div class="counter" aria-label="Количество объектов в портфолио">
           <strong id="total">0</strong><span>объектов<br>в портфолио</span>
         </div>
       </div>
-      <div class="workspace">
-        <section class="map-panel" aria-label="Карта регионов">
-          <div class="map-top">
-            <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small>Административная карта</small></span>
-            <span id="map-label">Выберите регион</span>
+      <div class="workspace is-space" id="workspace">
+        <section class="map-panel globe-map-panel" aria-label="Интерактивная география работ ARDMAN">
+          <div class="space-intro" id="space-intro">
+            <div class="space-grid" aria-hidden="true"></div>
+            <div class="space-copy">
+              <span class="space-kicker">ARDMAN · ГЕОГРАФИЯ РАБОТ</span>
+              <strong>От Земли — к объектам по всей России</strong>
+              <span>Нажмите на планету, чтобы перейти к карте Российской Федерации.</span>
+            </div>
+            <button class="earth-button" id="enter-russia" type="button" aria-label="Открыть карту Российской Федерации">
+              <span class="earth-orbit" aria-hidden="true">
+                <span class="earth-glow"></span>
+                <span class="earth">
+                  <span class="earth-texture"></span>
+                  <span class="earth-clouds"></span>
+                  <span class="earth-shade"></span>
+                </span>
+                <span class="earth-ring"></span>
+              </span>
+              <span class="earth-action">Открыть карту России <b>→</b></span>
+            </button>
+            <span class="space-hint">Нажмите на Землю</span>
           </div>
-          <div class="map-tools" aria-label="Масштаб карты">
-            <button id="zoom-out" aria-label="Уменьшить карту">−</button>
-            <output id="zoom-value">100%</output>
-            <button id="zoom-in" aria-label="Увеличить карту">+</button>
-            <button id="zoom-reset">Вся карта</button>
-          </div>
-          <div class="map-scroller" id="map-scroll">
-            <svg id="map" viewBox="0 0 1000 570" aria-label="Интерактивная карта России"></svg>
-          </div>
-          <div class="map-bottom">
-            <span><i></i> Регионы</span>
-            <span>Нажмите на регион, чтобы открыть объекты</span>
+          <div class="russia-map-stage" id="russia-map-stage" aria-hidden="true">
+            <div class="map-top">
+              <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small>Административная карта</small></span>
+              <span id="map-label">Выберите регион</span>
+            </div>
+            <div class="map-tools" aria-label="Масштаб карты">
+              <button id="zoom-out" aria-label="Уменьшить карту">−</button>
+              <output id="zoom-value">100%</output>
+              <button id="zoom-in" aria-label="Увеличить карту">+</button>
+              <button id="zoom-reset">Вся карта</button>
+            </div>
+            <div class="map-scroller" id="map-scroll">
+              <svg id="map" viewBox="0 0 1000 570" aria-label="Интерактивная карта России"></svg>
+            </div>
+            <div class="map-bottom">
+              <span><i></i> Регионы</span>
+              <span>Нажмите на регион, чтобы открыть объекты</span>
+            </div>
           </div>
         </section>
         <section class="region-panel" aria-label="Список регионов">
