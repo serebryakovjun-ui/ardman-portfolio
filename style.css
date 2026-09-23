@@ -177,4 +177,14 @@ footer{border-color:rgba(255,255,255,.4);color:#3d3e39}footer span:first-child{c
 
 /* ===== ARDMAN / Vector map 60 FPS ===== */
 .map-scroller{overflow:hidden;cursor:grab;touch-action:none;user-select:none}.map-scroller.is-dragging{cursor:grabbing}.map-scroller #map{width:100%!important;height:100%;max-width:none!important;margin-top:0;transform:none!important;transition:none!important;will-change:auto}.map-scroller.is-dragging #map .region-shape{cursor:grabbing}.map-scroller.is-dragging .map-tooltip{display:none}.map-bottom>span:last-child{font-weight:650}.map-top>span:first-child::after{content:"SVG · VECTOR";display:inline-block;margin-left:10px;padding:4px 6px;border:1px solid rgba(22,62,110,.18);border-radius:999px;color:#4d6971;font-size:.52rem;letter-spacing:.08em;vertical-align:1px}.workspace.is-map .map-panel{min-height:690px}.workspace.is-map .russia-map-stage{opacity:1;transform:none;filter:none;pointer-events:auto}
+
+/* Fast vector-map interaction: strokes retain the visual hierarchy without
+   expensive per-region SVG filters while the viewBox is changing. */
+#map.map-ready .region-shape.has-objects,
+#map.map-ready .region-shape:hover,
+#map.map-ready .region-shape:focus,
+#map.map-ready .region-shape.is-selected,
+#map.map-ready.is-choosing .region-shape:not(.is-selected){filter:none}
+.map-scroller.is-dragging #map .region-shape,
+.map-scroller.is-zooming #map .region-shape{transition:none}
 @media(max-width:640px){.map-scroller{height:390px}.workspace.is-map .map-panel{min-height:520px}.map-top>span:first-child::after{display:none}.map-bottom{align-items:flex-start;flex-direction:column;gap:6px}.map-bottom>span:last-child{max-width:none;text-align:left}}
