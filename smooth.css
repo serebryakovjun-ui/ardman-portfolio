@@ -1,0 +1,15 @@
+.map-scroller{contain:paint;touch-action:none}
+.map-scroller #map{will-change:transform;transform-origin:0 0}
+#map.map-ready .region-shape{animation:none!important;opacity:1;transform:none!important;filter:none!important;transition:fill .15s,stroke .15s}
+.map-scroller.camera-moving .map-labels,.map-scroller.camera-moving .map-tooltip{visibility:hidden}
+.map-panel:has(.camera-moving),.map-panel:has(.camera-moving) .map-top,.map-panel:has(.camera-moving) .map-bottom{backdrop-filter:none!important}
+.detail-gallery img{height:auto!important;max-height:75vh;object-fit:contain;cursor:zoom-in;background:#eee}
+.detail-gallery .portfolio-photo{height:auto!important;max-height:75vh;cursor:zoom-in}
+dialog.photo-viewer{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:#121416;color:white}
+.photo-toolbar{height:64px;display:flex;align-items:center;gap:10px;padding:10px;background:#202326}
+.photo-toolbar span{margin-right:auto;white-space:nowrap}
+.photo-toolbar button{padding:8px 12px;border:1px solid #555;border-radius:8px;background:#303437;color:white;cursor:pointer}
+.photo-surface{height:calc(100dvh - 64px);overflow:auto;display:grid;place-items:center;touch-action:pan-x pan-y pinch-zoom}
+.photo-surface>img,.photo-surface>svg{width:100%;height:100%;max-height:calc(100dvh - 64px);object-fit:contain;display:block}
+.photo-surface.enlarged{display:block}.photo-surface.enlarged>img,.photo-surface.enlarged>svg{width:200%;height:auto;max-height:none;max-width:none}
+@media(max-width:600px){.photo-toolbar{gap:5px;font-size:12px}.photo-toolbar button{padding:8px}.detail-gallery{grid-template-columns:1fr}}
