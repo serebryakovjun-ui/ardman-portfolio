@@ -9,7 +9,6 @@
   <link rel="icon" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
-  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -79,7 +78,7 @@
       <h1 id="region-title"></h1>
       <p id="region-note" class="muted"></p>
       <div id="years-panel">
-        <p class="intro">Выберите год выполнения работ.</p>
+        <p class="intro">Выберите год. Для архивных записей год публикации отмечен в карточке.</p>
         <div id="years" class="years-grid"></div>
         <button class="years-toggle" id="toggle-empty-years" type="button">Показать все годы</button>
       </div>
@@ -102,5 +101,7 @@
   </dialog>
   <script src="smooth.js?v=3" defer></script>
   <link rel="stylesheet" href="smooth.css?v=3">
+  <script src="catalog.js?v=4" defer></script>
+  <link rel="stylesheet" href="catalog.css?v=4">
 </body>
 </html>
