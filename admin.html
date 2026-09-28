@@ -31,16 +31,16 @@
   <section class="panel editor">
     <div id="welcome"><h1>Выберите объект</h1><p class="lead">Нажмите на объект слева для редактирования или добавьте новый.</p></div>
     <form id="form" hidden>
-      <h1 id="formTitle">Редактирование объекта</h1><p class="lead">Изменения сохраняются в мастерской до скачивания пакета.</p>
+      <h1 id="formTitle">Редактирование объекта</h1><p class="lead">Черновик сохраняется в этом браузере. Чтобы обновить сайт, скачайте ZIP и опубликуйте его.</p>
       <div class="grid">
         <div class="field full"><label for="title">Название объекта *</label><input id="title" required></div>
         <div class="field"><label for="region">Регион *</label><select id="region" required></select></div>
         <div class="field"><label for="city">Город / населённый пункт</label><input id="city"></div>
-        <div class="field"><label for="completedAt">Дата выполнения *</label><input id="completedAt" placeholder="Например: 2026-09" required><span class="hint">Можно указать год: 2026, месяц: 2026-09 или дату: 2026-09-22.</span></div>
+        <div class="field"><label for="completedAt">Дата</label><input id="completedAt" placeholder="Например: 2026-09"><span class="hint">Можно указать год: 2026, месяц: 2026-09 или дату: 2026-09-22.</span></div>
         <div class="field"><label for="coating">Тип покрытия</label><input id="coating" placeholder="Например: покрытие CRUMB"></div>
         <div class="field full"><label for="description">Описание</label><textarea id="description"></textarea></div>
       </div>
-      <div class="section"><div class="section-head"><h2>Фотографии</h2><span class="count" id="photoCount"></span></div><div class="photos" id="photos"></div><label class="drop" style="margin-top:12px">+ Выбрать фотографии с компьютера<input id="photoInput" type="file" accept="image/*" multiple></label><p class="hint">Новые фотографии автоматически уменьшаются для быстрой загрузки сайта.</p></div>
+      <div class="section"><div class="section-head"><h2>Фотографии</h2><span class="count" id="photoCount"></span></div><div class="photos" id="photos"></div><label class="drop" style="margin-top:12px">+ Выбрать фотографии с компьютера<input id="photoInput" type="file" accept="image/*" multiple></label><p class="hint">Оригиналы сохраняются без сжатия. Для каталога создаются лёгкие копии. Первое фото — обложка.</p></div>
       <div class="bottom"><button class="btn danger" type="button" id="deleteBtn">Удалить объект</button><button class="btn primary" type="submit">Сохранить изменения</button></div>
     </form>
   </section>
@@ -68,7 +68,9 @@ const crcTable=(()=>{let t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;f
 async function makeZip(entries){const enc=new TextEncoder(),locals=[],centrals=[];let offset=0;for(const e of entries){const name=enc.encode(e.name),data=e.data instanceof Uint8Array?e.data:new Uint8Array(await e.data.arrayBuffer()),crc=crc32(data),flags=0x800,local=new Uint8Array([...u32(0x04034b50),...u16(20),...u16(flags),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),...u16(0),...name]);locals.push(local,data);const central=new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(flags),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(offset),...name]);centrals.push(central);offset+=local.length+data.length}const c=concat(centrals),end=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(entries.length),...u16(entries.length),...u32(c.length),...u32(offset),...u16(0)]);return new Blob([...locals,c,end],{type:'application/zip'})}
 async function exportUpdate(){try{const json=new TextEncoder().encode(JSON.stringify(items.map(strip),null,2)),guide=new TextEncoder().encode('ARDMAN — обновление портфолио\r\n\r\n1. Распакуйте содержимое архива в папку ardman-portfolio с заменой файлов.\r\n2. Откройте GitHub Desktop.\r\n3. Summary: Обновление портфолио.\r\n4. Нажмите Commit to main, затем Push origin.\r\n5. Подождите несколько минут.\r\n');const entries=[{name:'objects.json',data:json},{name:'КАК_ОБНОВИТЬ.txt',data:guide},...[...pending].map(([name,data])=>({name,data}))];toast('Собираем пакет обновления…');const zip=await makeZip(entries),a=document.createElement('a');a.href=URL.createObjectURL(zip);a.download=`ARDMAN_UPDATE_${new Date().toISOString().slice(0,10)}.zip`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);dirty=false;toast(`Пакет готов: ${items.length} объектов, ${pending.size} новых фото`)}catch(e){console.error(e);toast('Не удалось собрать архив: '+e.message,'error')}}
 async function init(){try{const [a,b]=await Promise.all([fetch('objects.json?'+Date.now()),fetch('regions.json?'+Date.now())]);if(!a.ok||!b.ok)throw Error('Файлы базы не найдены');items=await a.json();const rd=await b.json();regions=rd.regions||[];fillRegions();renderList()}catch(e){$('objects').innerHTML='<div class="empty">Не удалось открыть базу сайта.<br>Открывайте мастерскую через опубликованный сайт GitHub Pages.</div>';toast(e.message,'error')}}
-$('addBtn').onclick=addObject;$('search').oninput=renderList;$('form').onsubmit=saveForm;$('photoInput').onchange=e=>{addPhotos([...e.target.files]);e.target.value=''};$('deleteBtn').onclick=deleteObject;$('exportBtn').onclick=exportUpdate;$('helpBtn').onclick=()=>$('help').showModal();window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});init();
+$('addBtn').onclick=addObject;$('search').oninput=renderList;$('form').onsubmit=saveForm;$('photoInput').onchange=e=>{addPhotos([...e.target.files]);e.target.value=''};$('deleteBtn').onclick=deleteObject;$('exportBtn').onclick=exportUpdate;$('helpBtn').onclick=()=>$('help').showModal();window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
 </script>
+<script src="workshop.js?v=5"></script>
+<link rel="stylesheet" href="workshop.css?v=5">
 </body>
 </html>
