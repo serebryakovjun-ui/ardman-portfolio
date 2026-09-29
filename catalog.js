@@ -25,8 +25,27 @@ const detailBeforeLinks=showDetail;
 function openDetailContent(o){detailObject=o;detailBeforeLinks(o);const h=$('detail-body').querySelector('h2');if(h)h.textContent=cleanTitle(o);const dt=$('detail-body').querySelector('.detail-meta dt');if(dt)dt.textContent=o.dateBasis==='publication_year'?'Год публикации':'Год работ';const share=document.createElement('button');share.className='share-object';share.textContent='Поделиться объектом';share.onclick=async()=>{const url=new URL(location.href);url.hash='object/'+encodeURIComponent(o.id);try{if(navigator.share)await navigator.share({title:cleanTitle(o),url:url.href});else{await navigator.clipboard.writeText(url.href);share.textContent='Ссылка скопирована';}}catch(e){if(e.name==='AbortError')return;const input=document.createElement('input');input.readOnly=true;input.value=url.href;share.after(input);input.select();}};$('detail-body').querySelector('.detail-heading').append(share);}
 showDetail=function(o){returnHash=location.hash;returnScroll=window.scrollY;history.replaceState(null,'','#object/'+encodeURIComponent(o.id));openDetailContent(o);};
 $('detail').addEventListener('close',()=>{if(closingRoute)return;if(location.hash.startsWith('#object/')){history.replaceState(null,'',location.pathname+location.search+returnHash);route();requestAnimationFrame(()=>window.scrollTo({top:returnScroll,behavior:'instant'}));}});
-// Single-region focus gets a visible action, independent of double-click discovery.
-const regionPanel=document.createElement('div');regionPanel.className='selected-region';regionPanel.hidden=true;regionPanel.innerHTML='<div><strong></strong><p></p></div><button>Открыть объекты</button>';
+// A region preview opens on map selection without leaving the map.
+const regionPanel=document.createElement('section');
+regionPanel.className='selected-region';regionPanel.hidden=true;
+regionPanel.setAttribute('aria-label','Выбранный регион');
+regionPanel.innerHTML='<div class="region-preview-photo"></div><div class="region-preview-copy"><span class="region-preview-kicker">ВЫБРАННЫЙ РЕГИОН</span><strong></strong><p role="status" aria-live="polite"></p><span class="region-preview-project"></span></div><div class="region-preview-actions"><button>Смотреть проекты →</button></div>';
 $('map-scroll').parentElement.append(regionPanel);
 const baseSetupMotion=setupMapMotion;
-setupMapMotion=function(){baseSetupMotion();const observer=new MutationObserver(()=>{const selected=$('map').querySelector('.is-selected');if(!selected){regionPanel.hidden=true;return;}const r=regions.find(r=>r.name===selected.getAttribute('aria-label'));if(!r)return;regionPanel.hidden=false;regionPanel.querySelector('strong').textContent=r.name;const n=inRegion(r).length;regionPanel.querySelector('p').textContent=`${n} ${objectWord(n)} в портфолио`;regionPanel.querySelector('button').onclick=()=>openRegion(r);});observer.observe($('map'),{subtree:true,attributes:true,attributeFilter:['class']});};
+setupMapMotion=function(){
+  baseSetupMotion();let active=null;
+  const observer=new MutationObserver(()=>{
+    const selected=$('map').querySelector('.is-selected'),r=selected?._region;
+    if(!r){active=null;regionPanel.hidden=true;return;}
+    if(active===r.id)return;active=r.id;
+    const list=inRegion(r),project=[...list].sort((a,b)=>(b.completedAt||'').localeCompare(a.completedAt||'')).find(o=>photos(o).length);
+    regionPanel.hidden=false;regionPanel.querySelector('strong').textContent=r.name;
+    regionPanel.querySelector('p').textContent=list.length?list.length+' '+objectWord(list.length)+' в портфолио':'Объекты пока не добавлены';
+    const photo=regionPanel.querySelector('.region-preview-photo');
+    photo.innerHTML=project?photoMarkup(project,photos(project)[0],0):'<span>Фото пока нет</span>';
+    photo.querySelector('img')?.addEventListener('error',()=>{photo.textContent='Фото недоступно';},{once:true});
+    regionPanel.querySelector('.region-preview-project').textContent=project?cleanTitle(project):'Выберите другой регион, чтобы посмотреть наши работы.';
+    const action=regionPanel.querySelector('button');action.hidden=!list.length;action.onclick=()=>openRegion(r);
+  });
+  observer.observe($('map'),{subtree:true,attributes:true,attributeFilter:['class']});
+};

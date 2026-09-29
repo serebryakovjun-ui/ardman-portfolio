@@ -14,4 +14,4 @@ let prefetchTimer=0;const openPhotoBase=openPhoto;
 openPhoto=function(o,i){clearTimeout(prefetchTimer);openPhotoBase(o,i);const connection=navigator.connection;if(connection?.saveData||/2g/.test(connection?.effectiveType||''))return;prefetchTimer=setTimeout(()=>{if(!photoDialog.open||photos(o).length<2)return;const img=new Image();img.decoding='async';img.src=photos(o)[(i+1)%photos(o).length];},500);};
 photoDialog.addEventListener('close',()=>clearTimeout(prefetchTimer));
 
-const fitRegionButton=document.createElement('button');fitRegionButton.textContent='Показать регион целиком';fitRegionButton.onclick=()=>window.fitSelectedRegion?.();regionPanel.append(fitRegionButton);
+const fitRegionButton=document.createElement('button');fitRegionButton.textContent='Показать регион целиком';fitRegionButton.onclick=()=>window.fitSelectedRegion?.();fitRegionButton.className='region-fit';regionPanel.querySelector('.region-preview-actions').append(fitRegionButton);
