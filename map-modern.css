@@ -1,0 +1,39 @@
+/* ARDMAN map: restrained atlas palette and responsive controls. */
+.experience-shell .workspace{gap:18px;align-items:stretch}
+.experience-shell .map-panel{background:#eef1ed;border:1px solid #d9dfd7;border-radius:24px;box-shadow:0 12px 32px #26382d0d}
+.map-panel::before,.map-panel::after{display:none}
+.experience-shell .region-panel{margin:0;border-radius:24px;background:#fff;border:1px solid #e0e3db;box-shadow:0 12px 32px #26382d08;max-height:690px;backdrop-filter:none}
+.experience-shell .map-top{padding:20px 24px;background:#ffffffed;border-bottom:1px solid #dce2d9;backdrop-filter:none;min-height:78px}
+.map-top>span:first-child{color:#35483d;font-size:.7rem;letter-spacing:.12em}
+.map-top>span:first-child::after{display:none}
+.map-top small{color:#68766d;margin-top:6px}
+.map-top>span:last-child{color:#485b4f;font-weight:600}
+.map-tools{top:94px;right:16px;border:1px solid #d7ded4;border-radius:14px;background:#fff;box-shadow:0 6px 20px #26382d12;backdrop-filter:none}
+.map-tools button{min-width:44px;min-height:44px;color:#35483d}
+.map-tools button:hover{background:#f5edda;color:#745514}
+.map-tools output{color:#5e6c62;font-variant-numeric:tabular-nums}
+.map-tools button:disabled{color:#aeb7af;background:transparent}
+.map-scroller{background:radial-gradient(ellipse at 50% 45%,#fafbf6 0%,#eef1ed 75%)}
+#map.map-ready .region-shape{fill:#e1e6dd;stroke:#a6b3a4;stroke-width:.7}
+#map.map-ready .region-shape.has-objects{fill:#cbd6bf;stroke:#829575;stroke-width:.85}
+#map.map-ready .region-shape:hover,#map.map-ready .region-shape:focus-visible{fill:#ead29a;stroke:#8c691e;stroke-width:1.6}
+#map.map-ready .region-shape.is-selected{fill:#dcb660;stroke:#73531b;stroke-width:2}
+#map .graticule path{stroke:#9aac9f;opacity:.24;stroke-width:.45}
+#map .map-labels text{fill:#35483d;stroke:#f7f9f2;stroke-width:2;font-weight:550}
+.experience-shell .map-bottom{background:#ffffffed;border-top:1px solid #dce2d9;padding:16px 22px;color:#58685b;backdrop-filter:none;gap:14px;flex-wrap:wrap}
+.map-legend{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
+.map-legend span{display:inline-flex;align-items:center;gap:7px}
+.map-bottom .map-legend i{margin:0;width:10px;height:10px;border-radius:3px;box-shadow:none;background:#cbd6bf;border:1px solid #829575}
+.map-bottom .map-legend .legend-empty{background:#e1e6dd;border-color:#a6b3a4}
+.map-bottom .map-legend .legend-selected{background:#dcb660;border-color:#73531b}
+.selected-region{background:#fffaf0;border-top:1px solid #e5d6af;padding:18px 22px}
+.selected-region strong{color:#35483d}
+.selected-region button{background:#344b3d;color:#fff;border-color:#344b3d;border-radius:12px;min-height:44px}
+.selected-region button:hover{background:#243b2d}
+.experience-shell .list-title{background:#fff;padding:22px;border-bottom-color:#e5e9e1}
+.experience-shell .region-btn{border-radius:12px;background:transparent}
+.experience-shell .region-btn:hover{background:#f0f4eb;border-color:#dce5d5;color:#344b3d;transform:none;box-shadow:none}
+.map-tools button:focus-visible,.selected-region button:focus-visible{outline:3px solid #9a711e;outline-offset:-4px}
+@media(max-width:1180px){.experience-shell .region-panel{margin:0;max-height:690px}}
+@media(max-width:900px){.experience-shell .workspace{grid-template-columns:1fr;gap:14px}.experience-shell .region-panel{max-height:480px}.workspace.is-map .map-panel{min-height:560px}}
+@media(max-width:640px){.experience-shell .map-panel,.experience-shell .region-panel{border-radius:18px}.experience-shell .map-top{padding:16px 14px;min-height:78px;gap:12px}.map-top>span:first-child{font-size:.6rem}.map-top>span:last-child{font-size:.68rem;max-width:42%;overflow-wrap:anywhere}.map-tools{position:relative;top:auto;right:auto;align-self:flex-end;flex-shrink:0;margin:12px 12px 0;box-shadow:0 3px 12px #26382d08}.map-tools button{min-width:44px;min-height:44px}.map-tools output{min-width:48px}.map-scroller{height:340px}.workspace.is-map .map-panel{min-height:0}.experience-shell .map-bottom{padding:14px;gap:10px;font-size:.65rem}.map-legend{gap:10px}.selected-region{padding:16px}.experience-shell .region-panel{max-height:460px}}

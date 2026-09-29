@@ -35,7 +35,7 @@
         <section class="map-panel globe-map-panel" aria-label="Интерактивная география работ ARDMAN">
           <div class="russia-map-stage" id="russia-map-stage" aria-hidden="false">
             <div class="map-top">
-              <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small>Административная карта</small></span>
+              <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small>География реализованных проектов</small></span>
               <span id="map-label">Выберите регион</span>
             </div>
             <div class="map-tools" aria-label="Масштаб карты">
@@ -48,7 +48,7 @@
               <svg id="map" viewBox="0 0 1000 570" aria-label="Интерактивная карта России"></svg>
             </div>
             <div class="map-bottom">
-              <span><i></i> Регионы</span>
+              <div class="map-legend" aria-label="Обозначения карты"><span><i></i>С объектами</span><span><i class="legend-empty"></i>Без объектов</span><span><i class="legend-selected"></i>Выбран</span></div>
               <span>Один клик — фокус · двойной — открыть объекты</span>
             </div>
           </div>
@@ -105,5 +105,6 @@
   <link rel="stylesheet" href="catalog.css?v=4">
 <script src="mobile.js?v=5" defer></script>
 <link rel="stylesheet" href="mobile.css?v=5">
+<link rel="stylesheet" href="map-modern.css?v=1">
 </body>
 </html>
