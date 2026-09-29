@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#10171b">
+  <meta name="theme-color" content="#f7f7f2">
   <meta name="description" content="Портфолио резиновых покрытий ARDMAN по регионам России и годам выполнения работ.">
   <title>ARDMAN — пространства для спорта и игры</title>
   <link rel="icon" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
-  <script src="app.js?v=5" defer></script>
+  <script src="app.js?v=6" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -38,7 +38,7 @@
         <section class="map-panel globe-map-panel" aria-label="Интерактивная география работ ARDMAN">
           <div class="russia-map-stage" id="russia-map-stage" aria-hidden="false">
             <div class="map-top">
-              <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small>География реализованных проектов</small></span>
+              <span>РОССИЙСКАЯ ФЕДЕРАЦИЯ<small id="map-coverage">География реализованных проектов</small></span>
               <span id="map-label">Выберите регион</span>
             </div>
             <div class="map-tools" aria-label="Масштаб карты">
@@ -51,7 +51,7 @@
               <svg id="map" viewBox="0 0 1000 570" aria-label="Интерактивная карта России"></svg>
             </div>
             <div class="map-bottom">
-              <div class="map-legend" aria-label="Обозначения карты"><span><i></i>С объектами</span><span><i class="legend-empty"></i>Без объектов</span><span><i class="legend-selected"></i>Выбран</span></div>
+              <div class="map-legend" aria-label="Обозначения карты"><span><i></i>Работы выполнены</span><span><i class="legend-empty"></i>Другие регионы</span><span><i class="legend-selected"></i>Выбран</span></div>
               <span>Нажмите на регион, чтобы посмотреть проекты</span>
             </div>
           </div>
@@ -85,7 +85,7 @@
       <h1 id="region-title"></h1>
       <p id="region-note" class="muted"></p>
       <div id="years-panel">
-        <p class="intro">Выберите год. Для архивных записей год публикации отмечен в карточке.</p>
+        <p class="intro" id="years-intro">Выберите год. Для архивных записей год публикации отмечен в карточке.</p>
         <div id="years" class="years-grid"></div>
         <button class="years-toggle" id="toggle-empty-years" type="button">Показать все годы</button>
       </div>
@@ -108,12 +108,13 @@
   </dialog>
   <script src="smooth.js?v=6" defer></script>
   <link rel="stylesheet" href="smooth.css?v=3">
-  <script src="catalog.js?v=6" defer></script>
+  <script src="catalog.js?v=7" defer></script>
   <link rel="stylesheet" href="catalog.css?v=4">
 <script src="mobile.js?v=6" defer></script>
 <link rel="stylesheet" href="mobile.css?v=5">
 <link rel="stylesheet" href="map-modern.css?v=3">
 <link rel="stylesheet" href="site-modern.css?v=1">
 <script src="site-modern.js?v=1" defer></script>
+<link rel="stylesheet" href="site-light.css?v=1">
 </body>
 </html>

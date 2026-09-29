@@ -40,12 +40,12 @@ setupMapMotion=function(){
     if(active===r.id)return;active=r.id;
     const list=inRegion(r),project=[...list].sort((a,b)=>(b.completedAt||'').localeCompare(a.completedAt||'')).find(o=>photos(o).length);
     regionPanel.hidden=false;regionPanel.querySelector('strong').textContent=r.name;
-    regionPanel.querySelector('p').textContent=list.length?list.length+' '+objectWord(list.length)+' в портфолио':'Объекты пока не добавлены';
+    regionPanel.querySelector('p').textContent=list.length?list.length+' '+objectWord(list.length)+' в портфолио':r.workCompleted?'Работы выполнены':'Объекты пока не добавлены';
     const photo=regionPanel.querySelector('.region-preview-photo');
     photo.innerHTML=project?photoMarkup(project,photos(project)[0],0):'<span>Фото пока нет</span>';
     photo.querySelector('img')?.addEventListener('error',()=>{photo.textContent='Фото недоступно';},{once:true});
-    regionPanel.querySelector('.region-preview-project').textContent=project?cleanTitle(project):'Выберите другой регион, чтобы посмотреть наши работы.';
-    const action=regionPanel.querySelector('button');action.hidden=!list.length;action.onclick=()=>openRegion(r);
+    regionPanel.querySelector('.region-preview-project').textContent=project?cleanTitle(project):r.workCompleted?'Фотографии объектов пока не добавлены в портфолио.':'Выберите другой регион, чтобы посмотреть наши работы.';
+    const action=regionPanel.querySelector('button');action.hidden=!list.length&&!r.workCompleted;action.textContent=list.length?'Смотреть проекты →':'О регионе →';action.onclick=()=>openRegion(r);
   });
   observer.observe($('map'),{subtree:true,attributes:true,attributeFilter:['class']});
 };
