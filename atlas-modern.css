@@ -1,0 +1,53 @@
+/* ARDMAN — light atlas. Geometry: github.com/map2105/karta */
+.experience-shell .workspace{border-color:#ced9cf;background:#f4f7f0;border-radius:24px;box-shadow:0 24px 60px #31443812}
+.experience-shell .map-panel,.experience-shell .map-top{background:#f4f7f0;color:#29493e;color-scheme:light}
+.experience-shell .map-top{padding-bottom:16px}
+.experience-shell .map-top>span:first-child{color:#557467}
+.experience-shell .map-top small{color:#667c70}
+.experience-shell .map-top>span:last-child,.experience-shell .map-panel.is-active .map-top>span:last-child{color:#29493e}
+.experience-shell .map-scroller{background:radial-gradient(ellipse at 48% 50%,#e2ece0,transparent 72%),#f4f7f0}
+#map.map-ready .region-shape{fill:#dce5d9;stroke:#fafcf6;stroke-width:calc(.8px * var(--atlas-stroke,1))}
+#map.map-ready .region-shape.has-objects{fill:#729987;stroke:#e8f1e6}
+#map.map-ready .region-shape.is-disputed{stroke:#6b7970;stroke-dasharray:calc(3px * var(--atlas-stroke,1)) calc(2px * var(--atlas-stroke,1));stroke-width:calc(1px * var(--atlas-stroke,1))}
+#map.map-ready .region-shape:hover,#map.map-ready .region-shape:focus-visible,#map.map-ready .region-shape.is-hovered:not(.is-selected){fill:#b9ceba;stroke:#3d6351;stroke-width:calc(1.4px * var(--atlas-stroke,1))}
+#map.map-ready .region-shape.is-selected{fill:#e6bc6c;stroke:#7f642e;stroke-width:calc(1.6px * var(--atlas-stroke,1))}
+#map .map-labels text{fill:#263f34;stroke:#f4f7f0;stroke-width:3;font-weight:550}
+.experience-shell .map-tools{background:#fffffff2;border-color:#d4ded3;box-shadow:0 4px 18px #29493e0d;top:100px}
+.experience-shell .map-tools button,.experience-shell .map-tools output{color:#355345}
+.experience-shell .map-tools button:hover{background:#e7eee2;color:#29493e}
+.experience-shell .map-tools button:disabled{color:#abb6aa}
+.experience-shell .map-tools button:last-child{border-color:#d4ded3}
+.atlas-shortcuts{display:flex;align-items:center;gap:8px;padding:0 26px 12px;position:relative;z-index:2;max-width:55%}
+.atlas-shortcuts>span{font-size:.65rem;color:#687e70;margin-right:3px}
+.atlas-shortcuts button{border:1px solid #cad8c9;border-radius:30px;background:#fff9;color:#355345;padding:9px 13px;font-size:.7rem;min-height:36px;cursor:pointer}
+.atlas-shortcuts button:hover{background:#dce8d8;border-color:#729987}
+.experience-shell .map-bottom{background:#f4f7f0;border-color:#d8e1d4;color:#5f7567}
+.map-bottom .map-legend i{background:#729987;border-color:#628874}
+.map-bottom .map-legend .legend-empty{background:#dce5d9;border-color:#bdccba}
+.map-bottom .map-legend .legend-selected{background:#e6bc6c;border-color:#bd9552}
+.experience-shell .region-panel{background:#fffef9;border-color:#d8e1d4;color:#29493e;color-scheme:light}
+.experience-shell .list-title{border-color:#e0e6dc}
+.experience-shell .list-title span{background:#edf2e8;color:#557467}
+.experience-shell .region-controls{background:#fffef9}
+.experience-shell .region-search{background:#f4f7f0;border-color:#d4ded3}
+.experience-shell .region-search input,.experience-shell .region-search>span{color:#355345}
+.experience-shell .region-search input::placeholder{color:#7a897d}
+.experience-shell .region-controls select{background:#fffef9;color:#557467;border-color:#d4ded3;color-scheme:light}
+.experience-shell .region-result{color:#718171}
+.experience-shell .region-btn{color:#365545}
+.experience-shell .region-btn span:last-child{color:#728273}
+.experience-shell .region-btn[data-has-work=true] span:last-child{color:#4d775d}
+.experience-shell .region-btn:hover{background:#edf2e8;border-color:#d4ded3;color:#29493e}
+.experience-shell .work-only-filter{color:#557467}
+.experience-shell .work-only-filter strong{color:#355345}
+.experience-shell .work-only-filter input{accent-color:#557d65}
+.experience-shell #regions{scrollbar-color:#bdcdbc transparent}
+.experience-shell .selected-region{background:#e8eee1;border-color:#ced9c6;color:#29493e}
+.experience-shell .selected-region p,.experience-shell .region-preview-project{color:#60755e}
+.experience-shell .region-preview-kicker{color:#617b52}
+.experience-shell .region-preview-photo{background:#d6e1ce;color:#60755e}
+.experience-shell .selected-region button{background:#355745;color:#fff}
+.experience-shell .selected-region button:hover{background:#274536}
+.experience-shell .selected-region .region-fit{background:transparent;color:#355745;border-color:#a8bda0}
+.experience-shell :focus-visible{outline:2px solid #8a6a2e;outline-offset:2px}
+@media(max-width:640px){.experience-shell .map-tools{top:auto}.atlas-shortcuts{max-width:none;padding:0 16px 8px}.atlas-shortcuts button{min-height:44px}.experience-shell .map-top{padding-bottom:12px}.experience-shell .map-scroller{height:330px}}

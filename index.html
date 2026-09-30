@@ -47,6 +47,7 @@
               <button id="zoom-in" aria-label="Увеличить карту">+</button>
               <button id="zoom-reset">Вся карта</button>
             </div>
+            <div class="atlas-shortcuts" aria-label="Быстрый переход к региону"><span>На карте</span><button data-map-region="86">ЛНР ↗</button><button data-map-region="85">ДНР ↗</button></div>
             <div class="map-scroller" id="map-scroll">
               <svg id="map" viewBox="0 0 1000 570" aria-label="Интерактивная карта России"></svg>
             </div>
@@ -66,7 +67,7 @@
           <div id="regions"><p class="muted">Загружаем регионы…</p></div>
         </section>
       </div>
-      <p class="map-credit">Картографическая основа: <a href="https://github.com/codeforgermany/click_that_hood/blob/main/public/data/russia.geojson" target="_blank" rel="noopener">Click That ’Hood</a>. Спорные территории представлены отдельно в списке.</p>
+      <p class="map-credit">Картографическая основа: <a href="https://github.com/map2105/karta" target="_blank" rel="noopener">map2105 / karta</a>. * Пунктиром отмечены территории с оспариваемым статусом. Геометрия — по исходной карте.</p>
       </section>
       <section class="company-strip" id="about" aria-label="ARDMAN в цифрах">
         <div class="company-copy"><p class="eyebrow">03 / О КОМПАНИИ</p><h2>Строим пространства для спорта, игры и движения.</h2><p>Проектируем и реализуем спортивные и детские площадки, основания и современные безопасные покрытия.</p></div>
@@ -106,7 +107,7 @@
     <div class="dialog-top"><button id="close-detail" class="back">← Назад к объектам</button></div>
     <div id="detail-body"></div>
   </dialog>
-  <script src="smooth.js?v=6" defer></script>
+  <script src="smooth.js?v=7" defer></script>
   <link rel="stylesheet" href="smooth.css?v=3">
   <script src="catalog.js?v=8" defer></script>
   <link rel="stylesheet" href="catalog.css?v=4">
@@ -116,5 +117,6 @@
 <link rel="stylesheet" href="site-modern.css?v=1">
 <script src="site-modern.js?v=1" defer></script>
 <link rel="stylesheet" href="site-light.css?v=3">
+<link rel="stylesheet" href="atlas-modern.css?v=7">
 </body>
 </html>
