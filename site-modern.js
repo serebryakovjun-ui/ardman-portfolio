@@ -39,3 +39,12 @@ document.querySelectorAll('[data-open-catalog]').forEach(link=>link.addEventList
 // Section links should remain reliable even after previously visiting the catalog.
 if(['#home','#featured','#geography','#about','#contacts'].includes(location.hash))mode='map';
 if(location.hash==='#catalog')mode='catalog';
+
+// Mobile geography keeps a single panel visible, without losing search or selection.
+document.querySelectorAll('.geography-toggle button').forEach(button=>{
+  button.addEventListener('click',()=>{
+    document.getElementById('workspace').dataset.geographyView=button.dataset.geographyView;
+    document.querySelectorAll('.geography-toggle button').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+    requestAnimationFrame(()=>window.dispatchEvent(new Event('resize')));
+  });
+});
