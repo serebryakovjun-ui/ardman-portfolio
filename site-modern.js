@@ -50,6 +50,19 @@ document.querySelectorAll('.geography-toggle button').forEach(button=>{
 });
 
 document.getElementById('region-search').addEventListener('input',()=>{
-  if(document.getElementById('region-search').value.trim())document.querySelector('.geography-toggle [data-geography-view="list"]').click();
+  if(matchMedia('(max-width:900px)').matches&&document.getElementById('region-search').value.trim())document.querySelector('.geography-toggle [data-geography-view="list"]').click();
 });
 new MutationObserver(()=>{document.getElementById('headline-regions').textContent=document.getElementById('company-regions').textContent;}).observe(document.getElementById('company-regions'),{childList:true});
+
+// Keep region discovery on the map; project navigation stays in the existing preview.
+document.getElementById('regions').addEventListener('click',event=>{
+ const button=event.target.closest('.region-btn');if(!button)return;
+ event.preventDefault();event.stopImmediatePropagation();
+ document.querySelector('.geography-toggle [data-geography-view="map"]').click();
+ requestAnimationFrame(()=>{window.focusMapRegion?.(button.dataset.regionId);if(matchMedia('(max-width:900px)').matches)document.getElementById('workspace').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
+},true);
+document.getElementById('region-search').addEventListener('keydown',event=>{
+ if(event.key!=='Enter')return;
+ const matches=[...document.querySelectorAll('#regions .region-btn')].filter(b=>!b.hidden&&getComputedStyle(b).display!=='none');
+ if(matches.length===1){event.preventDefault();matches[0].click();}
+});

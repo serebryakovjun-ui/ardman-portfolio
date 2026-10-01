@@ -17,3 +17,14 @@
 #map .map-labels text{fill:#f1f4f3;stroke:#293f49}
 .experience-shell .map-tools{top:78px}.experience-shell .map-top{padding-bottom:14px}
 @media(max-width:600px){.experience-shell .map-tools{top:auto}}
+
+/* Visible desktop directory and quieter geography. */
+#map .atlas-rivers{opacity:.28;stroke-width:calc(.5px * var(--atlas-stroke,1))}
+#map.map-ready .region-shape{fill:#33464f;stroke:#718187}
+#map.map-ready .region-shape.has-objects{fill:#839c9f;stroke:#b4c5c6}
+#map.map-ready .region-shape.is-selected{fill:#d8b56e;stroke:#ffe5ad}
+.experience-shell #workspace .region-btn[data-object-count="0"][data-has-work="true"]{flex-wrap:wrap;gap:6px}
+.experience-shell #workspace .region-btn[data-object-count="0"][data-has-work="true"] span:last-child{font-size:.62rem;white-space:normal;text-align:left;color:#d9c99e}
+.experience-shell #workspace .region-btn:hover{background:#30424d}
+@media(min-width:901px){.atlas-navigation .geography-toggle{display:none}.experience-shell #workspace{grid-template-columns:minmax(0,1fr) 310px;align-items:start}.experience-shell #workspace[data-geography-view] .map-panel{display:block}.experience-shell #workspace[data-geography-view] .region-panel{display:flex;flex-direction:column;border-left:1px solid #35434c;max-height:650px;height:650px}.experience-shell #workspace .region-panel #regions{overflow-y:auto;min-height:0}.experience-shell #workspace .map-scroller{height:470px}.experience-shell #workspace .region-btn{min-height:44px}.atlas-navigation .region-search{width:380px}}
+@media(min-width:901px) and (max-width:1100px){.experience-shell #workspace{grid-template-columns:minmax(0,1fr) 270px}}

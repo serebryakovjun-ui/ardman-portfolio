@@ -18,6 +18,7 @@ setupMapMotion = function () {
   const zoom=(k,px,py)=>{const b=target,n=Math.max(1,Math.min(8,k)),ratio=n/b.k;move({k:n,x:px-(px-b.x)*ratio,y:py-(py-b.y)*ratio});};
 
   const focus=(r,path,fit=false)=>{const b=path.getBBox(),g=geometry;const fitted=Math.max(1,Math.min(8,Math.min(g.r.width/(Math.max(b.width,1)*g.s*1.7),g.r.height/(Math.max(b.height,1)*g.s*1.7)))),k=fit?fitted:Math.max(current.k,fitted);map.querySelectorAll('.is-selected').forEach(p=>p.classList.remove('is-selected'));path.classList.add('is-selected');$('map-label').textContent=r.name;move({k,x:g.r.width/2-(g.ox+(b.x+b.width/2-home[0])*g.s)*k,y:g.r.height/2-(g.oy+(b.y+b.height/2-home[1])*g.s)*k});};
+  window.focusMapRegion=id=>{const path=[...map.querySelectorAll('.region-shape')].find(p=>p._region?.id===id);if(!path)return;measure();stop();focus(path._region,path,true);};
   window.fitSelectedRegion=()=>{const path=map.querySelector('.is-selected');if(path?._region){focus(path._region,path,true);}};
   document.querySelectorAll('[data-map-region]').forEach(button=>button.onclick=()=>{const path=[...map.querySelectorAll('.region-shape')].find(p=>p._region?.id===button.dataset.mapRegion);if(path){measure();stop();focus(path._region,path,true);}});
   const paths=[...map.querySelectorAll('.region-shape')];
@@ -43,7 +44,7 @@ setupMapMotion = function () {
   layoutLabels=()=>{
     if(!stage.clientWidth)return;
     const scale=geometry.s*current.k,used=[];
-    const limit=Math.round((stage.clientWidth<500?5:12)*current.k);
+    const limit=Math.round((stage.clientWidth<500?4:8)*Math.pow(current.k,.85));
     let shown=0;
     const selectedId=map.querySelector('.is-selected')?._region?.id;
     const ordered=[...labels].sort((a,b)=>Number(b.dataset.regionId===selectedId)-Number(a.dataset.regionId===selectedId));
