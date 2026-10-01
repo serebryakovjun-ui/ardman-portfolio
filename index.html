@@ -8,7 +8,7 @@
   <title>ARDMAN — пространства для спорта и игры</title>
   <link rel="icon" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
-  <script src="app.js?v=11" defer></script>
+  <script src="app.js?v=12" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -21,7 +21,7 @@
     <section id="home">
       <section class="experience-shell" id="geography" aria-labelledby="geography-title">
       <div class="section-heading"><div><p class="eyebrow">АРДМАН / ГЕОГРАФИЯ РАБОТ</p><h1 id="geography-title">Наши работы<br>по всей стране.</h1></div><p class="section-description"><span class="map-head-stats"><b id="headline-regions">55</b> регионов · <b id="total">—</b> объектов</span> <br>Выберите регион — покажем наши работы.</p></div>
-      <div class="atlas-navigation"><label class="region-search"><span aria-hidden="true">⌕</span><input id="region-search" type="search" autocomplete="off" placeholder="Найти регион" aria-label="Найти регион"></label><div class="geography-toggle" role="group" aria-label="Отображение регионов"><button type="button" aria-pressed="true" data-geography-view="map">Карта</button><button type="button" aria-pressed="false" data-geography-view="list">Список регионов</button></div></div>
+      <div class="atlas-navigation"><div class="coverage-switch" role="group" aria-label="География работ"><button type="button" data-coverage="all" aria-pressed="true">Все регионы</button><button type="button" data-coverage="work" aria-pressed="false">Наши работы</button></div><label class="region-search"><span aria-hidden="true">⌕</span><input id="region-search" type="search" autocomplete="off" placeholder="Найти регион" aria-label="Найти регион"></label><div class="geography-toggle" role="group" aria-label="Отображение регионов"><button type="button" aria-pressed="true" data-geography-view="map">Карта</button><button type="button" aria-pressed="false" data-geography-view="list">Список регионов</button></div></div>
       <div class="workspace is-map" id="workspace" data-geography-view="map">
         <section class="map-panel globe-map-panel" aria-label="Интерактивная география работ ARDMAN">
           <div class="russia-map-stage" id="russia-map-stage" aria-hidden="false">
@@ -98,7 +98,7 @@
     <div class="dialog-top"><button id="close-detail" class="back">← Назад к объектам</button></div>
     <div id="detail-body"></div>
   </dialog>
-  <script src="smooth.js?v=11" defer></script>
+  <script src="smooth.js?v=12" defer></script>
   <link rel="stylesheet" href="smooth.css?v=3">
   <script src="catalog.js?v=8" defer></script>
   <link rel="stylesheet" href="catalog.css?v=4">
@@ -110,5 +110,7 @@
 <link rel="stylesheet" href="site-light.css?v=8">
 <link rel="stylesheet" href="map-first.css?v=11">
 <script src="map-detail.js?v=10" defer></script>
+<link rel="stylesheet" href="site-atmosphere.css?v=12">
+<script src="map-sync.js?v=12" defer></script>
 </body>
 </html>
