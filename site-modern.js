@@ -1,9 +1,9 @@
 'use strict';
 // Keep the map/catalog switch next to the portfolio, below the introduction.
 const geographySection=document.getElementById('geography');
-geographySection.before(controls);
+document.getElementById('featured').before(controls);
 const setModeBeforeDesign=setMode;
-setMode=function(next){setModeBeforeDesign(next);if(mode==='catalog')catalog.before(controls);else geographySection.before(controls);};
+setMode=function(next){setModeBeforeDesign(next);if(mode==='catalog')catalog.before(controls);else document.getElementById('featured').before(controls);};
 const editorialProjects=[
   {id:'manual-20260922-122235-j4ob',title:'Двор, в котором хочется играть',place:'Нижний Новгород'},
   {id:'workshop-base-4',title:'Спортивные площадки в ЖК «Зенит»',place:'Нижний Новгород'},
@@ -48,3 +48,8 @@ document.querySelectorAll('.geography-toggle button').forEach(button=>{
     requestAnimationFrame(()=>window.dispatchEvent(new Event('resize')));
   });
 });
+
+document.getElementById('region-search').addEventListener('input',()=>{
+  if(document.getElementById('region-search').value.trim())document.querySelector('.geography-toggle [data-geography-view="list"]').click();
+});
+new MutationObserver(()=>{document.getElementById('headline-regions').textContent=document.getElementById('company-regions').textContent;}).observe(document.getElementById('company-regions'),{childList:true});
